@@ -8,39 +8,74 @@ import { BisectionParams, SolverResult, IterationResult } from '../types';
 
 /**
  * Normalizes input expressions.
- * Handles cases like "root 2", "sqrt(2)", or "2" by converting them to "x^2 - 2"
+ * Handles implicit multiplication, equation formatting, and smart math phrases.
  */
 export function normalizeExpression(input: string): string {
-  const trimmed = input.trim().toLowerCase();
-  
-  // Handle "root N" or "sqrt(N)" or "√N"
-  const rootMatch = trimmed.match(/^(?:root|sqrt|√)\s*(\d+(\.\d+)?)$/);
-  if (rootMatch) {
-    const n = rootMatch[1];
+  let normalized = input.trim().toLowerCase();
+
+  // 1. Root-style and standalone value detection
+  // Matches "sqrt(N)", "root N", "square root N", "√N", or just "N"
+  // Converts these to "x^2 - N" as per requirement
+  const standaloneValueMatch = normalized.match(/^(?:root|square root|sqrt|√)?\s*\(?(\d+(\.\d+)?)\)?$/);
+  if (standaloneValueMatch) {
+    const n = standaloneValueMatch[1];
     return `x^2 - ${n}`;
   }
 
-  // If it's just a number N, interpret as finding root of N (equivalent to x - N = 0 or x^2 - N = 0?)
-  // Usually "solve root 2" means x^2 - 2. "solve 2" is ambiguous, but let's stick to the prompt.
-  // The prompt says "If user enters only a number like √2 or root 2 ... convert to x^2 - 2"
+  // 2. Equation normalization (LHS = RHS -> LHS - (RHS))
+  if (normalized.includes('=')) {
+    const parts = normalized.split('=');
+    if (parts.length === 2) {
+      const lhs = parts[0].trim();
+      const rhs = parts[1].trim();
+      if (rhs === '0') {
+        normalized = lhs;
+      } else {
+        normalized = `(${lhs}) - (${rhs})`;
+      }
+    }
+  }
+
+  // 3. Normalizing synonyms/phrases
+  normalized = normalized.replace(/√/g, 'sqrt');
+
+  // 4. Handle implicit multiplication between number and variable/function
+  // e.g., 2x -> 2*x, 0.5x -> 0.5*x, 2sin(x) -> 2*sin(x)
+  normalized = normalized.replace(/(\d)\s*([a-z(])/g, '$1*$2');
   
-  return input;
+  // 5. Handle implicit multiplication between x and functions/parentheses
+  // e.g., x sin(x) -> x*sin(x), x(x+1) -> x*(x+1)
+  normalized = normalized.replace(/x\s*(sin|cos|tan|log|sqrt|exp|abs|\()/g, 'x*$1');
+
+  return normalized;
 }
 
 export function solveBisection(params: BisectionParams): SolverResult {
   const { a, b, epsilon = 0.00001, maxIterations = 20 } = params;
+  
+  if (!params.expression || params.expression.trim() === '') {
+    return { iterations: [], root: null, error: 'Please enter a valid function before solving.' };
+  }
+
   const expression = normalizeExpression(params.expression);
   
   let compiledExpr;
   try {
     compiledExpr = math.compile(expression);
+    // Test evaluate once to ensure it works with basic x
+    compiledExpr.evaluate({ x: 0 });
   } catch (err) {
-    return { iterations: [], root: null, error: 'Invalid mathematical expression.' };
+    return { 
+      iterations: [], 
+      root: null, 
+      error: 'Invalid function format detected.' 
+    };
   }
 
   const f = (x: number) => {
     try {
-      return compiledExpr.evaluate({ x });
+      const res = compiledExpr.evaluate({ x });
+      return typeof res === 'number' ? res : NaN;
     } catch (err) {
       return NaN;
     }
@@ -50,14 +85,26 @@ export function solveBisection(params: BisectionParams): SolverResult {
   const fb = f(b);
 
   if (isNaN(fa) || isNaN(fb)) {
-    return { iterations: [], root: null, error: 'Function evaluation failed at interval boundaries.' };
+    return { 
+      iterations: [], 
+      root: null, 
+      error: 'Invalid function format detected.'
+    };
+  }
+
+  // Exact roots at boundaries
+  if (Math.abs(fa) < 1e-15) {
+    return { iterations: [{ iteration: 1, a, b, c: a, fc: fa, error: 0 }], root: a };
+  }
+  if (Math.abs(fb) < 1e-15) {
+    return { iterations: [{ iteration: 1, a, b, c: b, fc: fb, error: 0 }], root: b };
   }
 
   if (fa * fb > 0) {
     return { 
       iterations: [], 
       root: null, 
-      error: 'The function does not bracket a root in the given interval [a, b]. f(a) and f(b) must have opposite signs.' 
+      error: 'f(a) and f(b) must have opposite signs' 
     };
   }
 

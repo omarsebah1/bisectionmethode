@@ -27,17 +27,32 @@ export default function IterationTable({ result }: IterationTableProps) {
   }
 
   if (result.error) {
+    let explanation = '';
+    if (result.error === 'Invalid function format detected.') {
+      explanation = 'Please use valid mathematical expressions like: x^2 - 2, sin(x) - x/2, or 3*x + 1.';
+    } else if (result.error === 'f(a) and f(b) must have opposite signs') {
+      explanation = 'The function must have opposite signs at a and b [f(a)*f(b) < 0].';
+    } else if (result.error === 'Please enter a valid function before solving.') {
+      explanation = 'Target function field cannot be empty.';
+    }
+
     return (
-      <div className="flex-1 p-8 bg-bg">
+      <div className="flex-1 p-8 bg-bg flex items-center justify-center">
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-6 bg-red-500/5 border border-red-500/20 rounded-md flex gap-4 items-start"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-8 bg-red-500/5 border border-red-500/30 rounded-xl flex flex-col items-center text-center gap-4 max-w-md shadow-[0_0_40px_rgba(239,68,68,0.1)] transition-all"
         >
-          <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-1" />
+          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-2">
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
           <div>
-            <h3 className="text-sm font-bold text-red-500 uppercase tracking-widest">Calculation Error</h3>
-            <p className="text-dim-text text-sm mt-2">{result.error}</p>
+            <h3 className="text-lg font-bold text-red-500 uppercase tracking-widest">{result.error}</h3>
+            {explanation && (
+              <p className="text-dim-text text-sm mt-3 leading-relaxed font-medium">
+                {explanation}
+              </p>
+            )}
           </div>
         </motion.div>
       </div>
