@@ -21,7 +21,7 @@ export default function App() {
   return (
     <div className="h-screen bg-bg text-text overflow-hidden flex flex-col">
       <Header />
-      
+
       <main className="flex-1 flex flex-col lg:grid lg:grid-cols-[1fr_340px] overflow-hidden">
         {/* Results Area (Left) */}
         <section className="flex-1 overflow-y-auto custom-scrollbar">
@@ -33,8 +33,10 @@ export default function App() {
       </main>
 
       <footer className="h-8 px-6 border-t border-grid-line bg-bg flex justify-between items-center text-[9px] uppercase tracking-[2px] text-dim-text/40 font-bold shrink-0">
-          
-          <span>Ref: {new Date().toISOString()}</span>
+
+        <span>
+          Date: {new Date().toLocaleDateString('en-GB')}
+        </span>
       </footer>
     </div>
   );
