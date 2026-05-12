@@ -33,12 +33,8 @@ export default function App() {
       </main>
 
       <footer className="h-8 px-6 border-t border-grid-line bg-bg flex justify-between items-center text-[9px] uppercase tracking-[2px] text-dim-text/40 font-bold shrink-0">
-          <div className="flex items-center gap-4">
-            <span>Precision Layer Alpha-1</span>
-            <div className="h-2 w-[1px] bg-white/10" />
-            <span>Core: B3-S1</span>
-          </div>
-          <span>Ref: {new Date().toISOString()}</span>
+          
+          <span> {new Date().}</span>
       </footer>
     </div>
   );
