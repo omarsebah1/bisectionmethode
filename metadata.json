@@ -1,0 +1,6 @@
+{
+  "name": "Bisection Solver Pro",
+  "description": "A modern, interactive Numerical Analysis tool for solving non-linear equations using the Bisection Method with step-by-step iteration tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
