@@ -34,7 +34,7 @@ export default function App() {
 
       <footer className="h-8 px-6 border-t border-grid-line bg-bg flex justify-between items-center text-[9px] uppercase tracking-[2px] text-dim-text/40 font-bold shrink-0">
           
-          <span> {new Date().}</span>
+          <span>Ref: {new Date().toISOString()}</span>
       </footer>
     </div>
   );
