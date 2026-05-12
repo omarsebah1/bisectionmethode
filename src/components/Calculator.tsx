@@ -60,7 +60,7 @@ export default function Calculator({ onSolve }: CalculatorProps) {
   ];
 
   return (
-    <aside className="w-full lg:w-[340px] flex flex-col gap-6 p-8 bg-panel border-l border-grid-line h-full lg:sticky lg:top-[70px] shadow-[-10px_0_30px_rgba(0,0,0,0.3)]">
+    <aside className="w-full h-full flex flex-col gap-6 p-6 md:p-8 bg-panel shadow-[-10px_0_30px_rgba(0,0,0,0.3)]">
       <div className="flex flex-col gap-6">
         {/* Function Input */}
         <div className="flex flex-col gap-2">
@@ -95,7 +95,7 @@ export default function Calculator({ onSolve }: CalculatorProps) {
         </div>
 
         {/* Intervals */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
             <label className="text-[11px] uppercase tracking-widest text-accent font-semibold">Interval [a]</label>
             <input

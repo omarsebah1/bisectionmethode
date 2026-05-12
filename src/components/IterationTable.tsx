@@ -60,38 +60,40 @@ export default function IterationTable({ result }: IterationTableProps) {
   }
 
   return (
-    <div className="flex-1 p-6 md:p-10 space-y-10 bg-[radial-gradient(circle_at_top_left,#111827,#0A0F1E)] min-h-full">
+    <div className="flex-1 p-4 sm:p-6 md:p-10 space-y-6 md:space-y-10 bg-[radial-gradient(circle_at_top_left,#111827,#0A0F1E)] min-h-full">
       {/* Root Summary Card */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-accent/5 border border-accent p-6 md:p-8 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_0_30px_rgba(0,210,255,0.1)]"
+        className="bg-accent/5 border border-accent p-4 sm:p-6 md:p-8 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 shadow-[0_0_30px_rgba(0,210,255,0.1)] relative overflow-hidden"
       >
-        <div className="space-y-2 text-center md:text-left">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-accent">Approximate Root Found</span>
-          <div className="text-xs text-dim-text">Convergence achieved within the specified tolerance.</div>
+        <div className="space-y-1 md:space-y-2 text-center md:text-left relative z-10">
+          <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-accent block">Approximate Root Found</span>
+          <div className="text-[9px] md:text-xs text-dim-text max-w-[200px] md:max-w-none">Convergence reached within defined tolerance.</div>
         </div>
-        <div className="text-4xl md:text-5xl font-mono text-accent tracking-tighter">
+        <div className="text-xl xs:text-2xl sm:text-4xl md:text-5xl font-mono text-accent tracking-tighter break-all text-center md:text-right relative z-10 w-full md:w-auto">
           {result.root?.toFixed(8)}
         </div>
+        {/* Subtle decorative glow for mobile visibility */}
+        <div className="absolute inset-0 bg-accent/5 md:hidden" />
       </motion.div>
 
       {/* Table Section */}
       <div className="space-y-4">
-        <h3 className="text-[11px] font-bold uppercase tracking-[2px] text-accent flex items-center gap-3">
+        <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[2px] text-accent flex items-center gap-3">
           Step-by-Step Iterations
           <div className="h-[1px] flex-1 bg-grid-line" />
         </h3>
 
-        <div className="overflow-x-auto">
-          <table className="iteration-table w-full text-left border-collapse min-w-[700px]">
+        <div className="w-full overflow-x-auto block custom-scrollbar border border-grid-line rounded-lg">
+          <table className="iteration-table w-full text-left border-collapse min-w-[700px] lg:min-w-full">
             <thead>
-              <tr className="border-b-2 border-accent">
-                <th className="px-4 py-3 text-[11px] uppercase text-dim-text tracking-widest">Iter</th>
-                <th className="px-4 py-3 text-[11px] uppercase text-dim-text tracking-widest">Range [a, b]</th>
-                <th className="px-4 py-3 text-[11px] uppercase text-dim-text tracking-widest">Midpoint (c)</th>
-                <th className="px-4 py-3 text-[11px] uppercase text-dim-text tracking-widest">f(c)</th>
-                <th className="px-4 py-3 text-[11px] uppercase text-dim-text tracking-widest">Error (abs)</th>
+              <tr className="border-b-2 border-accent bg-black/20">
+                <th className="px-3 md:px-4 py-3 text-[10px] md:text-[11px] uppercase text-dim-text tracking-widest">Iter</th>
+                <th className="px-3 md:px-4 py-3 text-[10px] md:text-[11px] uppercase text-dim-text tracking-widest">Range [a, b]</th>
+                <th className="px-3 md:px-4 py-3 text-[10px] md:text-[11px] uppercase text-dim-text tracking-widest">Midpoint (c)</th>
+                <th className="px-3 md:px-4 py-3 text-[10px] md:text-[11px] uppercase text-dim-text tracking-widest">f(c)</th>
+                <th className="px-3 md:px-4 py-3 text-[10px] md:text-[11px] uppercase text-dim-text tracking-widest">Error (abs)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-grid-line">
