@@ -16,7 +16,7 @@ export default function Header() {
       
       <div className="text-center md:text-right">
         <p className="text-[9px] md:text-xs text-dim-text leading-tight opacity-80">
-          Built by Omar Abu Alsubeh & Amir Abu Alhan
+          Built by Omar Abu Alsebeh & Amir Abualhin
         </p>
         <p className="text-[9px] md:text-xs text-accent font-medium mt-0.5 tracking-wider">
           Numerical Analysis Laboratory
